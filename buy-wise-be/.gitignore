@@ -1,0 +1,19 @@
+# Node modules and environment files
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+logs/
+*.log
+
+# Build/output folders (if any)
+build/
+coverage/
+
+# IDE/editor/project files
+.vscode/
+.idea/
+.DS_Store

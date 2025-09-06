@@ -1,0 +1,28 @@
+# Python virtual environments
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Data and model files—add these if they're very large or can be re-created!
+*.pkl
+*.index
+*.csv
+
+# Environment/config files
+.env
+*.env
+
+# IDE/editor/project files
+.vscode/
+.idea/
+.DS_Store
+
+# Log files
+*.log
+
+# OS files
+Thumbs.db

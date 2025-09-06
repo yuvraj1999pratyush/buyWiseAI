@@ -1,0 +1,56 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  background: var(--color-bg-dark);
+  box-shadow: 0 6px 10px rgba(177, 59, 255, 0.4),
+    /* primary purple */ 0 10px 20px rgba(24, 206, 247, 0.25); /* cyan glow */
+}
+
+.navbar-cont {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  position: relative;
+  max-width: 1280px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: flex-end;
+
+  position: absolute;
+  left: 20px;
+  top: 0px;
+}
+
+.navbar-logo__icon {
+  width: 80px;
+  height: 80px;
+}
+
+.navbar-logo__maintext {
+  font-size: 24px;
+  line-height: 100%;
+  margin: 0px;
+  padding: 0px;
+  margin-bottom: 17px;
+  color: var(--color-yellow);
+}
+
+.navbar-logo__altext {
+  font-size: 48px;
+  line-height: 1.1;
+  margin: 0 0 10px 8px;
+  padding: 0;
+  color: var(--color-primary-light);
+  text-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary),
+    0 0 20px var(--color-primary), 0 0 40px var(--color-primary);
+}
+
+.navbar-tagline {
+  font-size: 24px;
+}

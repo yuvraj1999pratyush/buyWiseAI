@@ -1,0 +1,112 @@
+.result {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-cont {
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-answer {
+  font-size: 20px;
+  line-height: 150%;
+  text-align: left;
+}
+
+.result-products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 per row */
+  gap: 16px;
+}
+
+.result-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  height: 400px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--color-primary);
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* default soft shadow */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+  > h3 {
+    font-size: 16px;
+    line-height: 125%;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  a {
+    padding: 8px 12px;
+    border-radius: 25px;
+    background-color: var(--color-primary);
+    color: var(--color-yellow);
+    width: 100px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    position: absolute;
+    bottom: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: all 0.3s ease;
+  }
+
+  a:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-bg-dark);
+    box-shadow: 0 0 10px var(--color-primary-light),
+      0 0 20px rgba(255, 204, 0, 0.6);
+  }
+}
+
+.result-product:hover {
+  box-shadow: 0 0 30px rgba(177, 59, 255, 0.6);
+  transform: translateY(-4px);
+}
+
+.result-thinking {
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #999 25%, #fff 50%, #999 75%);
+  background-size: 200% auto;
+  color: #999;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 1.5s linear infinite;
+}
+
+.result-error {
+  color: #ff4d4f;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+@keyframes shine {
+  to {
+    background-position: -200% center;
+  }
+}
