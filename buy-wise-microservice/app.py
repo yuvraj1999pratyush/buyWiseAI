@@ -4,6 +4,7 @@ import pickle
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import os
+import gc
 
 app = Flask(__name__)
 
@@ -15,29 +16,42 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-# Load files from current directory
+# Global variables for lazy loading
+index = None
+product_df = None
+embedding_model = None
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-print("Loading vector files...")
-try:
-    index = faiss.read_index(os.path.join(BASE_DIR, "product_embeddings.index"))
-    with open(os.path.join(BASE_DIR, "product_data.pkl"), "rb") as f:
-        product_df = pickle.load(f)
-    print("✅ Vector files loaded successfully")
-except Exception as e:
-    print(f"❌ Error loading files: {e}")
-    raise e
-
-print("Loading embedding model...")
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-print("✅ Embedding model loaded")
+def load_resources():
+    """Load resources only when needed"""
+    global index, product_df, embedding_model
+    
+    if index is None:
+        print("Loading vector files...")
+        try:
+            index = faiss.read_index(os.path.join(BASE_DIR, "product_embeddings.index"))
+            with open(os.path.join(BASE_DIR, "product_data.pkl"), "rb") as f:
+                product_df = pickle.load(f)
+            print("✅ Vector files loaded successfully")
+        except Exception as e:
+            print(f"❌ Error loading files: {e}")
+            raise e
+    
+    if embedding_model is None:
+        print("Loading embedding model...")
+        embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        print("✅ Embedding model loaded")
+    
+    return index, product_df, embedding_model
 
 @app.route('/', methods=['GET'])
 def health():
+    # Don't load resources for health check
     return jsonify({
         "status": "healthy", 
         "service": "BuyWise Microservice",
-        "products_loaded": len(product_df)
+        "memory_optimized": True
     })
 
 @app.route('/search', methods=['POST', 'OPTIONS'])
@@ -46,6 +60,9 @@ def search():
         return '', 200
         
     try:
+        # Load resources only when search is called
+        idx, df, model = load_resources()
+        
         data = request.json
         query_text = data.get('query', '')
         
@@ -55,13 +72,13 @@ def search():
         print(f"Searching for: {query_text}")
         
         # Generate embeddings and search
-        query_embedding = embedding_model.encode([query_text])
-        distances, indices = index.search(np.array(query_embedding).astype('float32'), 5)
+        query_embedding = model.encode([query_text])
+        distances, indices = idx.search(np.array(query_embedding).astype('float32'), 5)
         
         results = []
-        for idx in indices[0]:
-            if idx < len(product_df):
-                product = product_df.iloc[idx]
+        for idx_val in indices[0]:
+            if idx_val < len(df):
+                product = df.iloc[idx_val]
                 results.append({
                     "title": str(product.get('title', 'N/A')),
                     "description": str(product.get('description', 'N/A')),
@@ -70,6 +87,10 @@ def search():
                 })
 
         print(f"Found {len(results)} results")
+        
+        # Force garbage collection to free memory
+        gc.collect()
+        
         return jsonify({"results": results})
     
     except Exception as e:
